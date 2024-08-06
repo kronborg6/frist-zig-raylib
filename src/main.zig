@@ -10,7 +10,7 @@ pub fn main() anyerror!void {
 
     const tgg = rl.Vector3{ .x = 0, .y = 0, .z = 0 };
 
-    const cam = rl.Camera3D{ .position = rl.Vector3{ .x = 0, .y = 10, .z = 10 }, .target = rl.Vector3{ .x = 0, .y = 0, .z = 0 }, .up = rl.Vector3{ .x = 0, .y = 1, .z = 0 }, .fovy = 45, .projection = rl.CameraProjection.camera_perspective };
+    const cam = rl.Camera3D{ .position = rl.Vector3{ .x = 0, .y = 10, .z = 15 }, .target = rl.Vector3{ .x = 0, .y = 0, .z = 0 }, .up = rl.Vector3{ .x = 0, .y = 1, .z = 0 }, .fovy = 45, .projection = rl.CameraProjection.camera_perspective };
 
     rl.setTargetFPS(60);
 
@@ -24,7 +24,7 @@ pub fn main() anyerror!void {
         rl.clearBackground(rl.Color.white);
 
         rl.drawCube(tgg, 2, 2, 2, rl.Color.red);
-        rl.drawCubeWires(tgg, 2, 2, 2, rl.Color.maroon);
+        rl.drawCubeWires(tgg, 2, 2, 2, rl.Color.blue);
 
         rl.drawGrid(10, 1.0);
 
