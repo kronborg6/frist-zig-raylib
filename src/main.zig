@@ -1,5 +1,6 @@
 const rl = @import("raylib");
 const meta = @import("std").meta;
+const std = @import("std");
 
 pub fn main() anyerror!void {
     const screenWidt = 800;
@@ -25,6 +26,11 @@ pub fn main() anyerror!void {
 
         rl.drawCube(tgg, 2, 2, 2, rl.Color.red);
         rl.drawCubeWires(tgg, 2, 2, 2, rl.Color.blue);
+
+        const key = rl.getKeyPressed();
+        if (key != rl.KeyboardKey.key_null) {
+            std.debug.print("The key pressed: {}\n", .{key});
+        }
 
         rl.drawGrid(10, 1.0);
 
