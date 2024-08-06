@@ -14,7 +14,7 @@ pub fn main() anyerror!void {
     const cam = rl.Camera3D{ .position = rl.Vector3{ .x = 0, .y = 10, .z = 15 }, .target = rl.Vector3{ .x = 0, .y = 0, .z = 0 }, .up = rl.Vector3{ .x = 0, .y = 1, .z = 0 }, .fovy = 45, .projection = rl.CameraProjection.camera_perspective };
 
     rl.setTargetFPS(60);
-
+    rl.setExitKey(rl.KeyboardKey.key_null);
     while (!rl.windowShouldClose()) {
         rl.beginDrawing();
         defer rl.endDrawing();

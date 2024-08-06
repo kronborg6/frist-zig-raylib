@@ -47,21 +47,34 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("raylib", raylib);
     exe.root_module.addImport("raygui", raygui);
 
+    const example_movement = b.addExecutable(.{
+        .name = "movement",
+        .root_source_file = b.path("examples/movement.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    example_movement.linkLibrary(raylib_artifact);
+    example_movement.root_module.addImport("raylib", raylib);
+    example_movement.root_module.addImport("raygui", raygui);
+
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
     b.installArtifact(exe);
+    b.installArtifact(example_movement);
 
     // This *creates* a Run step in the build graph, to be executed when another
     // step is evaluated that depends on it. The next line below will establish
     // such a dependency.
     const run_cmd = b.addRunArtifact(exe);
+    const run_example_movement = b.addRunArtifact(example_movement);
 
     // By making the run step depend on the install step, it will be run from the
     // installation directory rather than directly from within the cache directory.
     // This is not necessary, however, if the application depends on other installed
     // files, this ensures they will be present and in the expected location.
     run_cmd.step.dependOn(b.getInstallStep());
+    run_example_movement.step.dependOn(b.getInstallStep());
 
     // This allows the user to pass arguments to the application in the build
     // command itself, like this: `zig build run -- arg1 arg2 etc`
@@ -73,7 +86,9 @@ pub fn build(b: *std.Build) void {
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".
     const run_step = b.step("run", "Run the app");
+    const gg = b.step("movement", "Run the example movement");
     run_step.dependOn(&run_cmd.step);
+    gg.dependOn(&run_example_movement.step);
 
     // Creates a step for unit testing. This only builds the test executable
     // but does not run it.
