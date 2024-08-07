@@ -26,6 +26,7 @@ pub fn main() anyerror!void {
 
         rl.drawCube(CubePosition, 2, 2, 2, rl.Color.red);
         rl.drawCubeWires(CubePosition, 2, 2, 2, rl.Color.blue);
+        if (rl.checkCollisionBoxes(rl.BoundingBox{}, rl.BoundingBox{})) {}
 
         const key = rl.getKeyPressed();
         if (key != rl.KeyboardKey.key_null) {

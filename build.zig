@@ -1,4 +1,11 @@
 const std = @import("std");
+const this = @This();
+
+const Program = struct {
+    name: []const u8,
+    path: []const u8,
+    desc: []const u8,
+};
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
@@ -47,34 +54,34 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("raylib", raylib);
     exe.root_module.addImport("raygui", raygui);
 
-    const example_movement = b.addExecutable(.{
-        .name = "movement",
-        .root_source_file = b.path("examples/movement.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    example_movement.linkLibrary(raylib_artifact);
-    example_movement.root_module.addImport("raylib", raylib);
-    example_movement.root_module.addImport("raygui", raygui);
+    // const example_movement = b.addExecutable(.{
+    //     .name = "movement",
+    //     .root_source_file = b.path("examples/movement.zig"),
+    //     .target = target,
+    //     .optimize = optimize,
+    // });
+    // example_movement.linkLibrary(raylib_artifact);
+    // example_movement.root_module.addImport("raylib", raylib);
+    // example_movement.root_module.addImport("raygui", raygui);
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
     b.installArtifact(exe);
-    b.installArtifact(example_movement);
+    // b.installArtifact(example_movement);
 
     // This *creates* a Run step in the build graph, to be executed when another
     // step is evaluated that depends on it. The next line below will establish
     // such a dependency.
     const run_cmd = b.addRunArtifact(exe);
-    const run_example_movement = b.addRunArtifact(example_movement);
+    // const run_example_movement = b.addRunArtifact(example_movement);
 
     // By making the run step depend on the install step, it will be run from the
     // installation directory rather than directly from within the cache directory.
     // This is not necessary, however, if the application depends on other installed
     // files, this ensures they will be present and in the expected location.
     run_cmd.step.dependOn(b.getInstallStep());
-    run_example_movement.step.dependOn(b.getInstallStep());
+    // run_example_movement.step.dependOn(b.getInstallStep());
 
     // This allows the user to pass arguments to the application in the build
     // command itself, like this: `zig build run -- arg1 arg2 etc`
@@ -86,9 +93,9 @@ pub fn build(b: *std.Build) void {
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".
     const run_step = b.step("run", "Run the app");
-    const gg = b.step("movement", "Run the example movement");
+    // const gg = b.step("movement", "Run the example movement");
     run_step.dependOn(&run_cmd.step);
-    gg.dependOn(&run_example_movement.step);
+    // gg.dependOn(&run_example_movement.step);
 
     // Creates a step for unit testing. This only builds the test executable
     // but does not run it.
@@ -114,4 +121,41 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_exe_unit_tests.step);
+
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+    // EXAMPLE TEST BUILD SHUTUP OKAY
+
+    const examples = [_]Program{
+        .{
+            .name = "movement",
+            .path = "examples/movement.zig",
+            .desc = "ez pz",
+        },
+        .{
+            .name = "hello",
+            .path = "examples/hello.zig",
+            .desc = "hello zig world",
+        },
+    };
+
+    for (examples) |ex| {
+        const exe_example = b.addExecutable(.{
+            .name = ex.name,
+            .root_source_file = b.path(ex.path),
+            .optimize = optimize,
+            .target = target,
+        });
+        exe_example.linkLibrary(raylib_artifact);
+        exe_example.root_module.addImport("raylib", raylib);
+        exe_example.root_module.addImport("raygui", raygui);
+
+        const run_ex_cmd = b.addRunArtifact(exe_example);
+        const run_exe_step = b.step(ex.name, ex.desc);
+
+        run_exe_step.dependOn(&run_ex_cmd.step);
+    }
 }
