@@ -1,4 +1,5 @@
 const rl = @import("raylib");
+const gui = @import("raygui");
 const meta = @import("std").meta;
 const std = @import("std");
 
@@ -22,11 +23,13 @@ pub fn main() anyerror!void {
         cam.begin();
         defer cam.end();
 
+        if (gui.guiButton(rl.Rectangle{ .x = 10, .y = 10, .width = 240, .height = 30 }, "gdfg") == 1) {}
+
         rl.clearBackground(rl.Color.white);
 
         rl.drawCube(CubePosition, 2, 2, 2, rl.Color.red);
         rl.drawCubeWires(CubePosition, 2, 2, 2, rl.Color.blue);
-        if (rl.checkCollisionBoxes(rl.BoundingBox{}, rl.BoundingBox{})) {}
+        // if (rl.checkCollisionBoxes(rl.BoundingBox{}, rl.BoundingBox{})) {}
 
         const key = rl.getKeyPressed();
         if (key != rl.KeyboardKey.key_null) {

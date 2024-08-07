@@ -6,6 +6,23 @@ const Program = struct {
     path: []const u8,
     desc: []const u8,
 };
+const examples = [_]Program{
+    .{
+        .name = "movement",
+        .path = "examples/movement.zig",
+        .desc = "ez pz",
+    },
+    .{
+        .name = "hello",
+        .path = "examples/hello.zig",
+        .desc = "hello zig world",
+    },
+    .{
+        .name = "gui",
+        .path = "examples/gui.zig",
+        .desc = "gui",
+    },
+};
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
@@ -129,18 +146,7 @@ pub fn build(b: *std.Build) void {
     // EXAMPLE TEST BUILD SHUTUP OKAY
     // EXAMPLE TEST BUILD SHUTUP OKAY
 
-    const examples = [_]Program{
-        .{
-            .name = "movement",
-            .path = "examples/movement.zig",
-            .desc = "ez pz",
-        },
-        .{
-            .name = "hello",
-            .path = "examples/hello.zig",
-            .desc = "hello zig world",
-        },
-    };
+    const examples_step = b.step("examples", "Builds all the examples");
 
     for (examples) |ex| {
         const exe_example = b.addExecutable(.{
@@ -157,5 +163,6 @@ pub fn build(b: *std.Build) void {
         const run_exe_step = b.step(ex.name, ex.desc);
 
         run_exe_step.dependOn(&run_ex_cmd.step);
+        examples_step.dependOn(&exe_example.step);
     }
 }
